@@ -14,7 +14,9 @@ public struct ProbabilityGroup<Item: Hashable & Codable>: Hashable {
     private let itemPositions: [Int]
     private let total: Int
     
-    public init(_ probabilitiesByItem: [Item: Int], enforcePercent: Bool = true) {
+    public init(_ probabilitiesByItem: [Item: Int],
+                enforcePercent: Bool = true) {
+
         guard !probabilitiesByItem.isEmpty else {
             fatalError("Must provide at least one item.")
         }
@@ -41,17 +43,22 @@ public struct ProbabilityGroup<Item: Hashable & Codable>: Hashable {
         self.total = currentPosition
     }
     
-    public func randomItem() -> Item {
-        
-        let randomNumber = Int.random(in: 0...total)
-        
+    public func randomItem<G: RandomNumberGenerator>(using generator: inout G) -> Item {
+
+        let randomNumber = Int.random(in: 0...total, using: &generator)
+
         for i in 1..<itemPositions.count {
             if randomNumber < itemPositions[i] {
                 return items[i-1]
             }
         }
-        
+
         return items.last!
+    }
+
+    public func randomItem() -> Item {
+        var systemRandomNumberGenerator = SystemRandomNumberGenerator()
+        return randomItem(using: &systemRandomNumberGenerator)
     }
 
     public static func copy(_ probabilityGroup: ProbabilityGroup, without item: Item) -> ProbabilityGroup {

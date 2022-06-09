@@ -65,7 +65,41 @@ final class ProbabilityGroupTests: XCTestCase {
         XCTAssertNotNil(testResultItem)
         XCTAssert(itemNames.contains(testResultItem))
     }
-    
+
+    func testRandomItemsWithSeededRNG() {
+
+        let itemDictionary = [
+            "One":25,
+            "Two":25,
+            "Three":25,
+            "Four":25
+        ]
+
+        let testGroup = ProbabilityGroup(itemDictionary)
+        let itemNames = Set(itemDictionary.keys)
+
+        let seedState = UInt64.random(in: UInt64.min...UInt64.max)
+        var seededRNG = SeededRandomNumberGenerator(state: seedState)
+        var resultList1: [String] = []
+        for _ in 1...50 {
+            let testResultItem = testGroup.randomItem(using: &seededRNG)
+            XCTAssertNotNil(testResultItem)
+            XCTAssert(itemNames.contains(testResultItem))
+            resultList1.append(testResultItem)
+        }
+
+        seededRNG = SeededRandomNumberGenerator(state: seedState)
+        var resultList2: [String] = []
+        for _ in 1...50 {
+            let testResultItem = testGroup.randomItem(using: &seededRNG)
+            XCTAssertNotNil(testResultItem)
+            XCTAssert(itemNames.contains(testResultItem))
+            resultList2.append(testResultItem)
+        }
+
+        XCTAssertEqual(resultList1, resultList2)
+    }
+
     func testHashable() {
         
         let itemDictionary1 = [

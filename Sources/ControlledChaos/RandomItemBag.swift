@@ -45,7 +45,7 @@ public class RandomItemBag<Item: Hashable & Codable>: Codable {
         invalidateCalculatedItemPositions()
     }
     
-    public func randomItem() -> Item? {
+    public func randomItem<G: RandomNumberGenerator>(using generator: inout G) -> Item? {
         if itemCounts.isEmpty {
             return nil
         }
@@ -62,7 +62,7 @@ public class RandomItemBag<Item: Hashable & Codable>: Codable {
             calculatedItemGroupPositionsValid = true
         }
         
-        let randomNumber = Int.random(in: 0...count)
+        let randomNumber = Int.random(in: 0...count, using: &generator)
         
         for i in 1..<calculatedItemGroupPositions.count {
             if randomNumber < calculatedItemGroupPositions[i] {
@@ -72,7 +72,12 @@ public class RandomItemBag<Item: Hashable & Codable>: Codable {
         
         return items.last!
     }
-    
+
+    public func randomItem() -> Item? {
+        var systemRandomNumberGenerator = SystemRandomNumberGenerator()
+        return randomItem(using: &systemRandomNumberGenerator)
+    }
+
     // MARK: Codable Implementation
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
