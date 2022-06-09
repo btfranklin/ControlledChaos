@@ -16,6 +16,7 @@ ControlledChaos
 - Function on `Double` to produce random values with a Gaussian distribution
 - `ProbabilityGroup` struct to get random items with specific probabilities
 - `RandomItemBag` class to randomly select finite items from a collection
+- `SeededRandomNumberGenerator` struct to produce random values with repeatable sequences using the SplitMix64 algorithm
 
 ## License
 
