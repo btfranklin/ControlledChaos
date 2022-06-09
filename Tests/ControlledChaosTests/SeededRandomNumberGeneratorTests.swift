@@ -25,5 +25,18 @@ final class SeededRandomNumberGeneratorTests: XCTestCase {
 
         XCTAssertEqual(resultList1, resultList2)
     }
+
+    func testPerformance() {
+
+        let seedState = UInt64.random(in: UInt64.min...UInt64.max)
+        var seededRNG = SeededRandomNumberGenerator(state: seedState)
+
+        self.measure {
+            for _ in 1...1000 {
+                _ = seededRNG.next()
+            }
+        }
+    }
+
 }
 #endif
