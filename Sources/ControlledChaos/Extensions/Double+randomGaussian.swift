@@ -10,11 +10,11 @@ extension Double {
      Returns a random Gaussian double with the provided standard deviation and mean values, which default to a
      standard deviation of 1 and a mean of 0 if not provided. The random value will be produced using the provided `RandomNumberGenerator`.
      */
-    public static func randomGaussian<G: RandomNumberGenerator>(withStandardDeviation standardDeviation: Double = 1.0,
-                                                                withMean mean: Double = 0.0,
-                                                                withMaximum maximum: Double = .infinity,
-                                                                withMinimum minimum: Double = -.infinity,
-                                                                using generator: inout G) -> Double {
+    public static func randomGaussian(withStandardDeviation standardDeviation: Double = 1.0,
+                                      withMean mean: Double = 0.0,
+                                      withMaximum maximum: Double = .infinity,
+                                      withMinimum minimum: Double = -.infinity,
+                                      using generator: inout some RandomNumberGenerator) -> Double {
 
         var result: Double?
         repeat {

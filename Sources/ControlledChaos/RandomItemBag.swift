@@ -45,7 +45,7 @@ public class RandomItemBag<Item: Hashable & Codable>: Codable {
         invalidateCalculatedItemPositions()
     }
     
-    public func randomItem<G: RandomNumberGenerator>(using generator: inout G) -> Item? {
+    public func randomItem(using generator: inout some RandomNumberGenerator) -> Item? {
         if itemCounts.isEmpty {
             return nil
         }

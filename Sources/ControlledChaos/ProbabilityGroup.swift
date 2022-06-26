@@ -43,7 +43,7 @@ public struct ProbabilityGroup<Item: Hashable & Codable>: Hashable {
         self.total = currentPosition
     }
     
-    public func randomItem<G: RandomNumberGenerator>(using generator: inout G) -> Item {
+    public func randomItem(using generator: inout some RandomNumberGenerator) -> Item {
 
         let randomNumber = Int.random(in: 0...total, using: &generator)
 
