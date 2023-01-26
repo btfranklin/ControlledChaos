@@ -3,48 +3,47 @@
 import Foundation
 
 public struct ProbabilityGroup<Item: Hashable & Codable>: Hashable {
-    
+
     enum CodingKeys: String, CodingKey {
         case probabilitiesByItem = "probabilities"
     }
-    
+
     public let probabilitiesByItem: [Item: Int]
-    
+
     private let items: [Item]
     private let itemPositions: [Int]
     private let total: Int
-    
+
     public init(_ probabilitiesByItem: [Item: Int],
                 enforcePercent: Bool = true) {
 
         guard !probabilitiesByItem.isEmpty else {
             fatalError("Must provide at least one item.")
         }
-        
+
         self.probabilitiesByItem = probabilitiesByItem
-        
+
         var currentPosition = 0;
         var items: [Item] = []
         var itemPositions: [Int] = []
-        
+
         for itemProbability in probabilitiesByItem {
             items.append(itemProbability.key)
             itemPositions.append(currentPosition)
-            
+
             currentPosition += itemProbability.value
         }
-        
+        self.total = currentPosition
+
         if enforcePercent {
-            assert(currentPosition == 100, "Item probabilities must add up to exactly 100, but provided ones add up to \(currentPosition).")
+            assert(self.total == 100, "Item probabilities must add up to exactly 100, but provided ones add up to \(self.total).")
         }
-        
+
         self.items = items
         self.itemPositions = itemPositions
-        self.total = currentPosition
     }
-    
-    public func randomItem(using generator: inout some RandomNumberGenerator) -> Item {
 
+    public func randomItem(using generator: inout some RandomNumberGenerator) -> Item {
         let randomNumber = Int.random(in: 0...total, using: &generator)
 
         for i in 1..<itemPositions.count {
